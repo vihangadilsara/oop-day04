@@ -1,10 +1,10 @@
-class Stack{
+class Queue{
 	private int[] dataArray;
 	private int nextIndex;
 	private double loadFact;
 	private int initSize;
 	
-	Stack(int initSize, double loadFact){
+	Queue(int initSize, double loadFact){
 		dataArray=new int[initSize];
 		nextIndex=0;
 		this.loadFact=loadFact;
@@ -26,7 +26,7 @@ class Stack{
 	public int poll(){
 		return isEmpty() ? -1:  dataArray[--nextIndex]; 
 	}
-	public void push(int data){
+	public void add(int data){
 		if(isFull()){
 			extendsArray();
 		}
@@ -50,9 +50,9 @@ class Stack{
 		dataArray=new int[initSize];
 		nextIndex=0;
 	}
-	public void pop(){
+	public void remove(){
 		if(!isEmpty()){
-			nextIndex--;
+			
 		}
 	}
 	public int search(int data){
@@ -61,9 +61,7 @@ class Stack{
 	}
 	public void display(){
 		System.out.print("[");
-		for (int i =nextIndex-1; i>=0 ; i--){
-			System.out.print(dataArray[i]+", ");
-		}
+		
 		System.out.println(isEmpty()? "empty]":"\b\b]");
 	}
 	public boolean isEmpty(){
@@ -75,32 +73,27 @@ class Stack{
 }
 class Demo{
 	public static void main(String args[]){
-		Stack s1=new Stack(12,0.25);
-		s1.push(10);
-		s1.push(20);
-		s1.push(30);
-		s1.push(40);
-		s1.push(50);
-		s1.push(60);
-		s1.push(70);
-		s1.push(80);
-		s1.push(90);
-		s1.push(100);
-		s1.push(110);
-		s1.push(120);
-		s1.display(); //[120,110,100,90...50,40,30,20,10]
-		System.out.println("Size      : "+s1.size()); //12
+		Queue q1=new Queue(12,0.25);
+		q1.add(10);
+		q1.add(20);
+		q1.add(30);
+		q1.add(40);
+		q1.add(50);
+		q1.add(60);
+		q1.add(70);
+		q1.add(80);
+		q1.add(90);
+		q1.add(100);
+		q1.add(110);
+		q1.add(120);
+		q1.display(); //[10,20,30,40,50 ........120]
+		System.out.println("Size      : "+q1.size()); //12
 		
-		int topData;
-		topData=s1.peek();
-		System.out.println("Top Data : "+topData); //120
-		System.out.println("After calling peek()...");
-		s1.display(); //[120,110,100,90...50,40,30,20,10]
+		q1.remove();
+		q1.display(); //[20,30,40,50 ........120]
+		System.out.println("Size      : "+q1.size()); //11
 		
-		topData=s1.poll();
-		System.out.println("Top Data : "+topData); //120
-		System.out.println("After calling poll()...");
-		s1.display(); //[110,100,90...50,40,30,20,10]
+		System.out.println("Index of 50 : "+q1.search(50)); //3
 		
 	}
 }
