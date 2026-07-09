@@ -1,156 +1,93 @@
-class Student{
-	private String id;	
-	private String name;	
-	private int prfMarks;
-	private int dbmsMarks;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+class SearchStudentForm  extends JFrame{
+	private JTextField txtStudentId;
+	private JTextField txtName;
+	private JTextField txtPrfMarks;
+	private JTextField txtDbmsMarks;
 	
-	Student(){
+	private JButton btCancel;
+	private JButton btSearch;
+	private StudentList studentList;
+	SearchStudentForm(StudentList studentList){
+		setSize(400,300);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.studentList=studentList;
 		
-	}
-	Student(String id, String name, int prfMarks, int dbmsMarks){
-		this.id=id;
-		this.name=name;
-		this.prfMarks=prfMarks;
-		this.dbmsMarks=dbmsMarks;
-	}
-	public String getId(){
-		return id;
-	}
-	public boolean equals(Student student){
-		return id.equalsIgnoreCase(student.id);
-	}
-	public String toString(){
-		return "["+id+","+name+","+prfMarks+","+dbmsMarks+"]";
-	}
-}
-class StudentList{ //Collection of student objects
-	private Student[] studentArray;
-	private int nextIndex;
-	private double loadFact;
-	private int initSize;
-	
-	StudentList(int initSize, double loadFact){
-		studentArray=new Student[initSize];
-		nextIndex=0;
-		this.loadFact=loadFact;
-		this.initSize=initSize;
-	}
-	private void extendsArray(){
-		Student tempStudentArray[]=new Student[studentArray.length+(int)(loadFact*studentArray.length)];
-		for (int i = 0; i < studentArray.length; i++){
-			tempStudentArray[i]=studentArray[i];
-		}
-		studentArray=tempStudentArray; 
-	}
-	private boolean isFull(){
-		return nextIndex>=studentArray.length;
-	}
-
-
-
-	public void add(Student student){ //Insertion order
-		if(isFull()){
-			extendsArray();
-		}
-		studentArray[nextIndex++]=student;
-	}
-	public void add(int index,Student student){
-		if(isFull()){
-			extendsArray();
-		}
-		if(index>=0 && index<=nextIndex){
-			for (int i = nextIndex-1; i >=index; i--){
-				studentArray[i+1]=studentArray[i];
-			}
-			studentArray[index]=student;
-			nextIndex++;
-		}
-	}
-	public void addFirst(Student student){
-		add(0,student);
-	}
-	public void addLast(Student student){
-		add(nextIndex,student);
-	}
-	public void trimToSize(){
-		Student[] tempStudentArray=new Student[size()];
-		for (int i = 0; i < studentArray.length; i++){
-			tempStudentArray[i]=studentArray[i];
-		}
-		studentArray=tempStudentArray;
-	}
-	public int size(){
-		return nextIndex;
-	}
-
-	public void clear(){
-		studentArray=new Student[initSize];
-		nextIndex=0;
-	}
-	public void remove(int index){
-		if(!isEmpty()){
-			if(index>=0 && index<nextIndex){
-				for(int i=index; i<nextIndex-1; i++){
-					studentArray[i]=studentArray[i+1];
+		JLabel titleLabel=new JLabel("Search Student Form");
+		titleLabel.setFont(new Font("",1,27));
+		titleLabel.setHorizontalAlignment(JLabel.CENTER);
+		add("North",titleLabel);
+		//-------------------------------------------------------------
+		
+		JPanel southPanel=new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		btSearch=new JButton("Search Student");
+		btCancel=new JButton("Cancel");
+		btSearch.setFont(new Font("",1,20));
+		btSearch.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				String id=txtStudentId.getText();
+				Student s1=studentList.search(id);				
+				if(s1!=null){
+					txtName.setText(s1.getName());
+					txtPrfMarks.setText(""+s1.getPrfMarks());
+					txtDbmsMarks.setText(s1.getDbmsMarks()+"");
 				}
-			}	
-			nextIndex--;
-		}
-	}
-	public void removeFirst(){
-		remove(0);
-	}
-
-	public void removeLast(){
-		remove(size()-1);
-	}
-	public int search(Student student){
-		for (int i = 0; i < nextIndex; i++){
-			if(student.equals(studentArray[i])){
-				return i;
 			}
-		}
-		return -1;
-	}
-	public void display(){
-		System.out.print("{");
-		for (int i = 0; i < nextIndex; i++){
-			System.out.print(studentArray[i].toString()+", ");
-		}
-		System.out.println(isEmpty()? "empty]":"\b\b}");
-	}
-	public void display(int start){
+		});
+		btCancel.setFont(new Font("",1,20));
 		
-	}
-	public void display(int startIndex, int endIndex){
+		southPanel.add(btSearch);
+		southPanel.add(btCancel);
+		add("South",southPanel);
+		//-------------------------------------------------------------
 		
-	}
-	public Student get(int index){
-		return null;
-	}
-	public Student getFirst(){
-		return null;
-	}
-	public Student getLast(){
-		return null;
-	}
-	public boolean isEmpty(){
-		return nextIndex<=0;
-	}
-	public int capacity(){
-		return studentArray.length;
-	}
-}
-class Demo{
-	public static void main(String args[]){
-		StudentList stList=new StudentList(12,0.25);
-		stList.add(new Student("S0001","Nimal",65,67));
-		stList.add(new Student("S0002","Amal",85,70));
-		stList.add(new Student("S0003","Bimal",35,30));
-		stList.add(new Student("S0004","Ramal",55,70));
-		stList.add(new Student("S0005","Anil",95,90));
-		stList.display(); //{[S0001,Nimal,65,76], [S0002","Amal",85,70]...}
+		JLabel lblStudentId=new JLabel("Student ID");
+		JLabel lblName=new JLabel("Name");
+		JLabel lblPrfMarks=new JLabel("Prf Marks");
+		JLabel lblDbmsMarks=new JLabel("Dbms Marks");
+		lblStudentId.setFont(new Font("",1,20));
+		lblName.setFont(new Font("",1,20));
+		lblPrfMarks.setFont(new Font("",1,20));
+		lblDbmsMarks.setFont(new Font("",1,20));
 		
-		System.out.println("Index of S003-Bimal : "+stList.search(new Student("S0003","Bimal",35,30))); //2
+		JPanel labelPanel=new JPanel(new GridLayout(4,1));
+		JPanel idTextPanal=new JPanel(new FlowLayout(FlowLayout.LEFT));
+		labelPanel.add(lblStudentId);
+		labelPanel.add(lblName);
+		labelPanel.add(lblPrfMarks);
+		labelPanel.add(lblDbmsMarks);
+		add("West",labelPanel);
+		
+		//-------------------------------------------------------------
+		txtStudentId=new JTextField(5);
+		txtStudentId.setFont(new Font("",1,20));
+		txtName=new JTextField(10);
+		txtName.setFont(new Font("",1,20));
+		txtPrfMarks=new JTextField(4);
+		txtPrfMarks.setFont(new Font("",1,20));
+		txtDbmsMarks=new JTextField(4);
+		txtDbmsMarks.setFont(new Font("",1,20));
+		
+		JPanel textPanel=new JPanel(new GridLayout(4,1));
+		
+		JPanel idTextPanel=new JPanel(new FlowLayout(FlowLayout.LEFT));
+		idTextPanal.add(txtStudentId);
+		textPanel.add(idTextPanal);
+		
+		JPanel nameTextPanal=new JPanel(new FlowLayout(FlowLayout.LEFT));
+		nameTextPanal.add(txtName);
+		textPanel.add(nameTextPanal);
+		
+		JPanel prfMarksTextPanal=new JPanel(new FlowLayout(FlowLayout.LEFT));
+		prfMarksTextPanal.add(txtPrfMarks);
+		textPanel.add(prfMarksTextPanal);
+		
+		JPanel dbmsMarksTextPanal=new JPanel(new FlowLayout(FlowLayout.LEFT));
+		dbmsMarksTextPanal.add(txtDbmsMarks);
+		textPanel.add(dbmsMarksTextPanal);
+		add("Center",textPanel);
 	}
 }
